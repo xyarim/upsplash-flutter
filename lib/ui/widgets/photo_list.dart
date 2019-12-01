@@ -8,11 +8,15 @@ import 'package:upsplash_app/repository/photo_repository.dart';
 import 'package:upsplash_app/utils/hex_color.dart';
 
 class PhotoListWidget extends StatelessWidget {
+  final PhotoRepository repository;
+
+  const PhotoListWidget(this.repository) : super();
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       child: _PhotoListWidget(),
-      create: (context) => PhotoListBloc(MainPhotoRepository()),
+      create: (context) => PhotoListBloc(repository),
     );
   }
 }
