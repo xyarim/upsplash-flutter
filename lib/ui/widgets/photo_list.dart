@@ -19,6 +19,7 @@ class PhotoListWidget extends StatelessWidget {
       create: (context) => PhotoListBloc(repository),
     );
   }
+
 }
 
 class _PhotoListWidget extends StatefulWidget {
@@ -26,7 +27,7 @@ class _PhotoListWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _PhotoListWidgetState();
 }
 
-class _PhotoListWidgetState extends State<_PhotoListWidget> {
+class _PhotoListWidgetState extends State<_PhotoListWidget> with AutomaticKeepAliveClientMixin {
   PhotoListBloc _bloc;
   final _scrollController = ScrollController();
   final _scrollThreshold = 200.0;
@@ -101,6 +102,10 @@ class _PhotoListWidgetState extends State<_PhotoListWidget> {
       },
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class BottomLoader extends StatelessWidget {
