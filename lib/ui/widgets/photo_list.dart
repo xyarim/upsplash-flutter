@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:upsplash_app/blocs/photo_list/bloc.dart';
 import 'package:upsplash_app/models/PhotoListResponse.dart';
 import 'package:upsplash_app/repository/photo_repository.dart';
+import 'package:upsplash_app/utils/hex_color.dart';
 
 class PhotoListWidget extends StatelessWidget {
   @override
@@ -62,18 +64,31 @@ class _PhotoListWidgetState extends State<_PhotoListWidget> {
           );
         if (state is PhotoListLoaded) {
           return ListView.builder(
-              itemCount: state.photos.length+1,
+              itemCount: state.photos.length + 1,
               controller: _scrollController,
               itemBuilder: (buildContext, index) {
                 if (index >= state.photos.length) return BottomLoader();
                 PhotoListBean item = state.photos[index];
                 double displayWidth = MediaQuery.of(context).size.width;
                 double finalHeight = displayWidth / (item.width / item.height);
-                return FadeInImage.memoryNetwork(
-                  image:item.urls.small,
-                  placeholder: ,
-                  width: displayWidth,
-                  height: finalHeight,
+                Color primaryColor = HexColor(item.color);
+                return Stack(
+                  children: <Widget>[
+                    SizedBox(
+                      width: displayWidth,
+                      height: finalHeight,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(color: primaryColor),
+                      ),
+                    ),
+                    FadeInImage.memoryNetwork(
+                      image: item.urls.regular,
+                      placeholder: kTransparentImage,
+                      fit: BoxFit.fitWidth,
+                      width: displayWidth,
+                      height: finalHeight,
+                    ),
+                  ],
                 );
               });
         }
@@ -93,9 +108,7 @@ class BottomLoader extends StatelessWidget {
         child: SizedBox(
           width: 50,
           height: 50,
-          child: CircularProgressIndicator(
-            strokeWidth: 1.5,
-          ),
+          child: Center(child: CircularProgressIndicator()),
         ),
       ),
     );
