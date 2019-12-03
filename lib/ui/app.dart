@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:upsplash_app/ui/pages/home.dart';
+import 'package:upsplash_app/ui/pages/photo_detail.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -10,7 +11,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      initialRoute: HomePage.routeName,
+      routes: {
+        HomePage.routeName: (context) => HomePage(),
+        PhotoDetailPage.routeName: (context) => PhotoDetailPage(),
+      },
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:upsplash_app/blocs/photo_list/bloc.dart';
 import 'package:upsplash_app/models/PhotoListResponse.dart';
 import 'package:upsplash_app/repository/photo_repository.dart';
+import 'package:upsplash_app/ui/pages/photo_detail.dart';
 import 'package:upsplash_app/utils/hex_color.dart';
 
 class PhotoListWidget extends StatelessWidget {
@@ -19,7 +20,6 @@ class PhotoListWidget extends StatelessWidget {
       create: (context) => PhotoListBloc(repository),
     );
   }
-
 }
 
 class _PhotoListWidget extends StatefulWidget {
@@ -27,7 +27,8 @@ class _PhotoListWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _PhotoListWidgetState();
 }
 
-class _PhotoListWidgetState extends State<_PhotoListWidget> with AutomaticKeepAliveClientMixin {
+class _PhotoListWidgetState extends State<_PhotoListWidget>
+    with AutomaticKeepAliveClientMixin {
   PhotoListBloc _bloc;
   final _scrollController = ScrollController();
   final _scrollThreshold = 200.0;
@@ -77,29 +78,52 @@ class _PhotoListWidgetState extends State<_PhotoListWidget> with AutomaticKeepAl
                 double displayWidth = MediaQuery.of(context).size.width;
                 double finalHeight = displayWidth / (item.width / item.height);
                 Color primaryColor = HexColor(item.color);
-                return Stack(
-                  children: <Widget>[
-                    SizedBox(
-                      width: displayWidth,
-                      height: finalHeight,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(color: primaryColor),
-                      ),
+                return InkWell(
+                  onTap: (){
+                    _onPhotoTap(item);
+                  },
+                  child: Hero(
+                    tag: "photo${item.id}",
+                    child: Stack(
+                      children: <Widget>[
+                        SizedBox(
+                          width: displayWidth,
+                          height: finalHeight,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(color: primaryColor),
+                          ),
+                        ),
+                        FadeInImage.memoryNetwork(
+                          image: item.urls.regular,
+                          placeholder: kTransparentImage,
+                          fit: BoxFit.fitWidth,
+                          width: displayWidth,
+                          height: finalHeight,
+                        ),
+                      ],
                     ),
-                    FadeInImage.memoryNetwork(
-                      image: item.urls.regular,
-                      placeholder: kTransparentImage,
-                      fit: BoxFit.fitWidth,
-                      width: displayWidth,
-                      height: finalHeight,
-                    ),
-                  ],
+                  ),
                 );
               });
         }
 
         return Center(child: Text("sesh"));
       },
+    );
+  }
+
+  _onPhotoTap(PhotoListBean photoListBean) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PhotoDetailPage(),
+        // Pass the arguments as part of the RouteSettings. The
+        // ExtractArgumentScreen reads the arguments from these
+        // settings.
+        settings: RouteSettings(
+          arguments: PhotoDetailPageArguments(photoListBean),
+        ),
+      ),
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:upsplash_app/repository/photo_repository.dart';
 import 'package:upsplash_app/ui/widgets/photo_list.dart';
 
 class HomePage extends StatelessWidget {
+  static final routeName = "homePage";
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
