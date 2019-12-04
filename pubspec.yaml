@@ -24,6 +24,10 @@ dependencies:
   equatable: ^0.6.0
   flutter_bloc: ^2.0.0
   transparent_image: 1.0.0
+  permission: 0.1.5
+  image_downloader: 0.19.1
+
+
 
 
 
