@@ -36,13 +36,15 @@ class PhotoListBloc extends Bloc<PhotoListEvent, PhotoListState> {
       try {
         if (currentState is InitialPhotoListState) {
           final photos = await photoRepository.getPhotos(0);
-          yield PhotoListLoaded(photos: photos);
+          yield PhotoListLoaded(photos, 0);
         } else if (currentState is PhotoListLoaded) {
+          int currentPage = currentState.page;
           final photos =
-              await photoRepository.getPhotos(currentState.photos.length);
+          await photoRepository.getPhotos(currentPage++);
+          print("current_page = $currentPage");
           yield photos.isEmpty
-              ? currentState.copyWith(photos: photos)
-              : PhotoListLoaded(photos: currentState.photos+ photos);
+              ? currentState.copyWith(photos)
+              : PhotoListLoaded(currentState.photos + photos, currentPage);
         }
       } catch (error, stacktrace) {
         yield PhotoListError();

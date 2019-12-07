@@ -10,10 +10,11 @@ class PhotoListError extends PhotoListState {}
 
 class PhotoListLoaded extends PhotoListState {
   final List<PhotoListBean> photos;
+  final int page;
 
-  PhotoListLoaded({this.photos});
+  PhotoListLoaded(this.photos, this.page);
 
-  PhotoListLoaded copyWith({List<PhotoListBean> photos}) {
-    return PhotoListLoaded(photos: photos);
+  PhotoListLoaded copyWith(List<PhotoListBean> photos) {
+    return PhotoListLoaded(photos, page);
   }
 }

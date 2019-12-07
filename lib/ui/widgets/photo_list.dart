@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +9,8 @@ import 'package:upsplash_app/models/PhotoListResponse.dart';
 import 'package:upsplash_app/repository/photo_repository.dart';
 import 'package:upsplash_app/ui/pages/photo_detail.dart';
 import 'package:upsplash_app/utils/hex_color.dart';
+
+import 'bottom_loader.dart';
 
 class PhotoListWidget extends StatelessWidget {
   final PhotoRepository repository;
@@ -79,7 +83,7 @@ class _PhotoListWidgetState extends State<_PhotoListWidget>
                 double finalHeight = displayWidth / (item.width / item.height);
                 Color primaryColor = HexColor(item.color);
                 return InkWell(
-                  onTap: (){
+                  onTap: () {
                     _onPhotoTap(item);
                   },
                   child: Hero(
@@ -92,6 +96,13 @@ class _PhotoListWidgetState extends State<_PhotoListWidget>
                           child: DecoratedBox(
                             decoration: BoxDecoration(color: primaryColor),
                           ),
+                        ),
+                        FadeInImage.memoryNetwork(
+                          image: item.urls.thumb,
+                          placeholder: kTransparentImage,
+                          fit: BoxFit.fitWidth,
+                          width: displayWidth,
+                          height: finalHeight,
                         ),
                         FadeInImage.memoryNetwork(
                           image: item.urls.regular,
@@ -130,20 +141,4 @@ class _PhotoListWidgetState extends State<_PhotoListWidget>
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
-}
-
-class BottomLoader extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Center(
-        child: SizedBox(
-          width: 50,
-          height: 50,
-          child: Center(child: CircularProgressIndicator()),
-        ),
-      ),
-    );
-  }
 }
