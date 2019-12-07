@@ -2,7 +2,7 @@
 
 Unofficial [Unsplash](https://unsplash.com/) client written using dart and flutter
 
-### Sreenshots
+## Sreenshots
 <center>
 <p float="left">
   <img src="https://user-images.githubusercontent.com/21035435/70373561-b5484080-190a-11ea-833b-e082e15a2e2b.png" width="252" height="504">
@@ -10,6 +10,12 @@ Unofficial [Unsplash](https://unsplash.com/) client written using dart and flutt
   <img src="https://user-images.githubusercontent.com/21035435/70373562-b7aa9a80-190a-11ea-8dd4-fd282410930d.png" width="252" height="504">
 </p>
 </center>
+
+## Architecture
+<img src="https://raw.githubusercontent.com/felangel/bloc/master/docs/assets/bloc_architecture.png" alt="Bloc Architecture" />
+
+The goal of this pattern is to make it easy to separate presentation from business logic, facilitating testability and reusability.
+
 
 ## Libraries
 
