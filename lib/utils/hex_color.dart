@@ -9,5 +9,12 @@ class HexColor extends Color {
     return int.parse(hexColor, radix: 16);
   }
 
-  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
+  static int _inverted(int color) {
+    return Color(0xffffff).value ^ color;
+  }
+
+  HexColor(final String hexColor, {bool inverted = false})
+      : super(inverted
+      ? _inverted(_getColorFromHex(hexColor))
+      : _getColorFromHex(hexColor));
 }
