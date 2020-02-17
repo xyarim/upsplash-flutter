@@ -64,7 +64,7 @@ class PhotoDetailWidgetState extends State<PhotoDetailWidget> {
               },
               child: (state is DownloadingState)
                   ? _buildLoading()
-                  : Icon(Icons.file_download)));
+                  : Icon(Icons.file_download,color: Colors.white,)));
     });
   }
 
