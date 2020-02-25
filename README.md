@@ -1,4 +1,5 @@
 # Upsplash
+![Flutter CI](https://github.com/xyarim/upsplash-flutter/workflows/Flutter%20CI/badge.svg)
 
 Unofficial [Unsplash](https://unsplash.com/) client written using dart and flutter
 
