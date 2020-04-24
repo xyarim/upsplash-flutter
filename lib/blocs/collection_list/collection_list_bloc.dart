@@ -5,6 +5,9 @@ import 'package:rxdart/rxdart.dart';
 import 'package:upsplash_app/repository/collection_repository.dart';
 
 import './bloc.dart';
+import 'bloc.dart';
+import 'bloc.dart';
+import 'bloc.dart';
 
 class CollectionListBloc
     extends Bloc<CollectionListEvent, CollectionListState> {
@@ -15,17 +18,16 @@ class CollectionListBloc
   @override
   CollectionListState get initialState => InitialCollectionListState();
 
+
+
   @override
-  Stream<CollectionListState> transformEvents(
-    Stream<CollectionListEvent> events,
-    Stream<CollectionListState> Function(CollectionListEvent event) next,
-  ) {
+  Stream<Transition<CollectionListEvent, CollectionListState>> transformEvents(
+      Stream<CollectionListEvent> events, transitionFn) {
     return super.transformEvents(
-      (events as Observable<CollectionListEvent>).debounceTime(
-        Duration(milliseconds: 500),
-      ),
-      next,
-    );
+        events.debounceTime(
+          Duration(milliseconds: 500),
+        ),
+        transitionFn);
   }
 
   @override
