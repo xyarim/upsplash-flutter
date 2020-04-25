@@ -14,17 +14,27 @@ class PhotoListBloc extends Bloc<PhotoListEvent, PhotoListState> {
   @override
   PhotoListState get initialState => InitialPhotoListState();
 
+  // @override
+  // Stream<PhotoListState> transformEvents(
+  //   Stream<PhotoListEvent> events,
+  //   Stream<PhotoListState> Function(PhotoListEvent event) next,
+  // ) {
+  //   return super.transformEvents(
+  //     events.debounceTime(
+  //       Duration(milliseconds: 500),
+  //     ),
+  //     next,
+  //   );
+  // }
+
   @override
-  Stream<PhotoListState> transformEvents(
-    Stream<PhotoListEvent> events,
-    Stream<PhotoListState> Function(PhotoListEvent event) next,
-  ) {
+  Stream<Transition<PhotoListEvent, PhotoListState>> transformEvents(
+      Stream<PhotoListEvent> events, transitionFn) {
     return super.transformEvents(
-      (events as Observable<PhotoListEvent>).debounceTime(
-        Duration(milliseconds: 500),
-      ),
-      next,
-    );
+        events.debounceTime(
+          Duration(milliseconds: 500),
+        ),
+        transitionFn);
   }
 
   @override
@@ -39,8 +49,7 @@ class PhotoListBloc extends Bloc<PhotoListEvent, PhotoListState> {
           yield PhotoListLoaded(photos, 0);
         } else if (currentState is PhotoListLoaded) {
           int currentPage = currentState.page;
-          final photos =
-          await photoRepository.getPhotos(currentPage++);
+          final photos = await photoRepository.getPhotos(currentPage++);
           print("current_page = $currentPage");
           yield photos.isEmpty
               ? currentState.copyWith(photos)

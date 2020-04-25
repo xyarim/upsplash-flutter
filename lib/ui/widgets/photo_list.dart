@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +7,9 @@ import 'package:upsplash_app/models/PhotoListResponse.dart';
 import 'package:upsplash_app/repository/photo_repository.dart';
 import 'package:upsplash_app/ui/pages/photo_detail.dart';
 import 'package:upsplash_app/utils/hex_color.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../utils/hex_color.dart';
 import 'bottom_loader.dart';
 
 class PhotoListWidget extends StatelessWidget {
@@ -79,39 +79,20 @@ class _PhotoListWidgetState extends State<_PhotoListWidget>
               itemBuilder: (buildContext, index) {
                 if (index >= state.photos.length) return BottomLoader();
                 PhotoListBean item = state.photos[index];
-                double displayWidth = MediaQuery.of(context).size.width;
-                double finalHeight = displayWidth / (item.width / item.height);
-                Color primaryColor = HexColor(item.color);
                 return InkWell(
                   onTap: () {
                     _onPhotoTap(item);
                   },
                   child: Hero(
                     tag: "photo${item.id}",
-                    child: Stack(
-                      children: <Widget>[
-                        SizedBox(
-                          width: displayWidth,
-                          height: finalHeight,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(color: primaryColor),
-                          ),
-                        ),
-                        FadeInImage.memoryNetwork(
-                          image: item.urls.thumb,
-                          placeholder: kTransparentImage,
-                          fit: BoxFit.fitWidth,
-                          width: displayWidth,
-                          height: finalHeight,
-                        ),
-                        FadeInImage.memoryNetwork(
-                          image: item.urls.regular,
-                          placeholder: kTransparentImage,
-                          fit: BoxFit.fitWidth,
-                          width: displayWidth,
-                          height: finalHeight,
-                        ),
-                      ],
+                    child: InstaImage(
+                      color: item.color,
+                      urlImage: item.urls.regular,
+                      itemWidth: item.width,
+                      itemHeight: item.height,
+                      user: item.user.username,
+                      urlUserImage: item.user.profileImage.small,
+                      likes: item.likes,
                     ),
                   ),
                 );
@@ -141,4 +122,122 @@ class _PhotoListWidgetState extends State<_PhotoListWidget>
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+}
+
+class InstaImage extends StatelessWidget {
+  final String user;
+  final String urlImage;
+  final String color;
+  final String urlUserImage;
+  final int itemWidth;
+  final int itemHeight;
+  final int likes;
+
+  const InstaImage(
+      {Key key,
+      this.user,
+      this.color,
+      this.urlImage,
+      this.urlUserImage,
+      this.itemWidth,
+      this.itemHeight,
+      this.likes})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double displayWidth = MediaQuery.of(context).size.width - 16;
+    double finalHeight = displayWidth / (itemWidth / itemHeight);
+
+    return Container(
+      padding: EdgeInsets.all(8),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                CachedNetworkImage(
+                  imageUrl: urlUserImage,
+                  imageBuilder: (context, imageProvier) => Container(
+                    width: 30.0,
+                    height: 30.0,
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: imageProvier,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Text(
+                  user,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
+          Stack(
+            children: <Widget>[
+              SizedBox(
+                width: displayWidth,
+                height: finalHeight,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: HexColor(color)),
+                ),
+              ),
+              FadeInImage.memoryNetwork(
+                image: urlImage,
+                placeholder: kTransparentImage,
+                fit: BoxFit.fitWidth,
+                width: displayWidth,
+                height: finalHeight,
+              ),
+            ],
+          ),
+          Container(
+            height: 32,
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 4,
+                ),
+                Icon(
+                  Icons.favorite,
+                  size: 16,
+                ),
+                SizedBox(
+                  width: 4,
+                ),
+                Text(
+                  likes.toString() + (likes == 1? ' like' : ' likes'),
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Divider(
+            color: Color.fromARGB(255, 130, 130, 130),
+            height: 20,
+          ),
+        ],
+      ),
+    );
+  }
 }
