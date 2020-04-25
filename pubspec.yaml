@@ -26,7 +26,7 @@ dependencies:
   transparent_image: 1.0.0
   permission: 0.1.5
   image_downloader: 0.19.1
-  cached_network_image: ^2.1.0+1 
+  cached_network_image: ^2.1.0+1  
 
 
 
